@@ -28,8 +28,15 @@ Gladys before reporting a problem.
 
 ## Scope
 
-In scope: the code of this repository and the Docker image it publishes.
+In scope: the code of this repository and the Docker image it publishes. The
+integration stores in `/data/parcels.json` the tracked and archived parcels
+(number, name, carrier, last events) and the count of the DHL requests of the
+day. The 17TRACK and DHL API keys are kept by Gladys in the integration's
+configuration, sent only to `https://api.17track.net` (in the `17token`
+header) and to `https://api-eu.dhl.com` (in the `DHL-API-Key` header), and
+never written to the logs. The tracking numbers are sent to these two services
+only. The container makes no other network request and opens no port.
 
 Out of scope: Gladys Assistant itself (see its
 [security policy](https://github.com/GladysAssistant/Gladys/security/policy)),
-and the third-party services and devices the integration talks to.
+the 17TRACK and DHL APIs.

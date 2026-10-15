@@ -50,7 +50,7 @@ export const REGISTER_RETRY_MS = 24 * 3_600_000;
 export const MAX_NAME = 60;
 export const MAX_EVENTS = 15;
 export const MAX_ARCHIVE = 50;
-export const MAX_SUMMARY = 250;
+export const MAX_SENTENCE = 1000;
 // Read by the "Read the parcels now" action when no parcel is on the way, to
 // tell a valid DHL key (404 on this number) from a refused one (401).
 export const DHL_CHECK_NUMBER = '0000000000';
@@ -875,7 +875,7 @@ export class Tracker {
       texts.item({ name: parcel.name, phrase: phrases[parcel.status] ?? phrases.in_transit }),
     );
     const text = `${texts.intro({ count: active.length })}${items.join(texts.separator)}${texts.end}`;
-    return text.length <= MAX_SUMMARY * 4 ? text : `${text.slice(0, MAX_SUMMARY * 4 - 1)}…`;
+    return text.length <= MAX_SENTENCE ? text : `${text.slice(0, MAX_SENTENCE - 1)}…`;
   }
 
   // --- Actions -----------------------------------------------------------------

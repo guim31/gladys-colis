@@ -253,7 +253,7 @@ test('the documentation says no account was used, and German says "du"', () => {
 });
 
 test('Spanish says "usted", never "tú"', () => {
-  const informal = /(?<!\p{L})(tú|tienes|puedes|quieres|añade|elige|introduce)(?!\p{L})/iu;
+  const informal = /(?<!\p{L})(tú|tienes|puedes|quieres|tus|tu)(?!\p{L})/iu;
   const lines = docs.es.split('\n').filter((line) => informal.test(line));
   assert.deepEqual(lines, []);
   const texts = manifestTexts(manifest)
