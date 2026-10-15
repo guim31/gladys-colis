@@ -1,0 +1,168 @@
+{
+  "code": 0,
+  "data": {
+    "accepted": [
+      {
+        "number": "LP00123456789012",
+        "carrier": 190271,
+        "param": null,
+        "tag": null,
+        "track_info": {
+          "shipping_info": {
+            "shipper_address": {
+              "country": "CN",
+              "state": null,
+              "city": null,
+              "street": null,
+              "postal_code": null,
+              "coordinates": {
+                "longitude": null,
+                "latitude": null
+              }
+            },
+            "recipient_address": {
+              "country": "FR",
+              "state": null,
+              "city": null,
+              "street": null,
+              "postal_code": null,
+              "coordinates": {
+                "longitude": null,
+                "latitude": null
+              }
+            }
+          },
+          "latest_status": {
+            "status": "AvailableForPickup",
+            "sub_status": "AvailableForPickup_Other",
+            "sub_status_descr": null
+          },
+          "latest_event": {
+            "time_iso": "2026-10-14T10:05:00+02:00",
+            "time_utc": "2026-10-14T08:05:00Z",
+            "time_raw": {
+              "date": "2026-10-14",
+              "time": "10:05:00",
+              "timezone": "+02:00"
+            },
+            "description": "Votre colis est disponible dans votre point de retrait Pickup.",
+            "description_translation": null,
+            "location": "LYON",
+            "stage": "AvailableForPickup",
+            "sub_status": "AvailableForPickup_Other",
+            "address": {
+              "country": "FR",
+              "state": null,
+              "city": "Lyon",
+              "street": null,
+              "postal_code": null,
+              "coordinates": {
+                "longitude": null,
+                "latitude": null
+              }
+            }
+          },
+          "time_metrics": {
+            "days_after_order": 9,
+            "days_of_transit": 9,
+            "days_of_transit_done": 9,
+            "days_after_last_update": 0,
+            "estimated_delivery_date": {
+              "source": null,
+              "from": null,
+              "to": null
+            }
+          },
+          "milestone": [],
+          "misc_info": {
+            "risk_factor": 0,
+            "service_type": null,
+            "weight_raw": null,
+            "weight_kg": null,
+            "pieces": null,
+            "dimensions": null,
+            "customer_number": null,
+            "reference_number": null,
+            "local_number": null,
+            "local_provider": null,
+            "local_key": 0
+          },
+          "tracking": {
+            "providers_hash": 987654321,
+            "providers": [
+              {
+                "provider": {
+                  "key": 190271,
+                  "name": "Cainiao",
+                  "alias": "Cainiao",
+                  "tel": null,
+                  "homepage": "https://global.cainiao.com",
+                  "country": "CN"
+                },
+                "provider_lang": null,
+                "provider_tips": null,
+                "service_type": null,
+                "latest_sync_status": "Success",
+                "latest_sync_time": "2026-10-14T07:58:12Z",
+                "events_hash": 123456789,
+                "events": [
+                  {
+                    "time_iso": "2026-10-14T10:05:00+02:00",
+                    "time_utc": "2026-10-14T08:05:00Z",
+                    "time_raw": {
+                      "date": "2026-10-14",
+                      "time": "10:05:00",
+                      "timezone": "+02:00"
+                    },
+                    "description": "Votre colis est disponible dans votre point de retrait Pickup.",
+                    "description_translation": null,
+                    "location": "LYON",
+                    "stage": "AvailableForPickup",
+                    "sub_status": "AvailableForPickup_Other",
+                    "address": {
+                      "country": "FR",
+                      "state": null,
+                      "city": "Lyon",
+                      "street": null,
+                      "postal_code": null,
+                      "coordinates": {
+                        "longitude": null,
+                        "latitude": null
+                      }
+                    }
+                  },
+                  {
+                    "time_iso": "2026-10-12T21:00:00+08:00",
+                    "time_utc": "2026-10-12T13:00:00Z",
+                    "time_raw": {
+                      "date": "2026-10-12",
+                      "time": "21:00:00",
+                      "timezone": "+08:00"
+                    },
+                    "description": "Departed from origin country",
+                    "description_translation": null,
+                    "location": "Guangzhou",
+                    "stage": "Departure",
+                    "sub_status": "InTransit_Departure",
+                    "address": {
+                      "country": "CN",
+                      "state": null,
+                      "city": "Guangzhou",
+                      "street": null,
+                      "postal_code": null,
+                      "coordinates": {
+                        "longitude": null,
+                        "latitude": null
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "rejected": []
+  }
+}

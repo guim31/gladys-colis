@@ -1,0 +1,15 @@
+{
+  "code": 0,
+  "data": {
+    "accepted": [],
+    "rejected": [
+      {
+        "number": "AB12345678",
+        "error": {
+          "code": -18019903,
+          "message": "Unable to detect carrier, please specify the carrier."
+        }
+      }
+    ]
+  }
+}

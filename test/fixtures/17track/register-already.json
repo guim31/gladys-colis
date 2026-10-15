@@ -1,0 +1,15 @@
+{
+  "code": 0,
+  "data": {
+    "accepted": [],
+    "rejected": [
+      {
+        "number": "RR123456785CN",
+        "error": {
+          "code": -18019901,
+          "message": "The tracking number 'RR123456785CN' has been registered, don't need to repeat registration."
+        }
+      }
+    ]
+  }
+}
