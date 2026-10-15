@@ -1,6 +1,6 @@
 {
   "name": "gladys-colis",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "Gladys Assistant integration: track parcels from every carrier with 17TRACK and the official DHL API.",
   "type": "module",

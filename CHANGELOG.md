@@ -10,6 +10,8 @@ the notes of the version's GitHub Release.
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-10-15
+
 ### Added
 
 - Track parcels from every carrier worldwide: 17TRACK (carrier detected from the number) and the official DHL
@@ -27,4 +29,5 @@ the notes of the version's GitHub Release.
 - A delivered parcel is archived after 7 days (adjustable).
 - English, French, German and Spanish everywhere.
 
-[Unreleased]: https://github.com/guim31/gladys-colis/commits/main
+[Unreleased]: https://github.com/guim31/gladys-colis/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/guim31/gladys-colis/releases/tag/v1.0.1

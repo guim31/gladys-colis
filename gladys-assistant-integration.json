@@ -8,8 +8,8 @@
     "de": "Verfolge Sendungen aller Zusteller weltweit mit 17TRACK und der offiziellen DHL-API.",
     "es": "Siga sus paquetes de todos los transportistas del mundo con 17TRACK y la API oficial de DHL."
   },
-  "version": "1.0.0",
-  "docker_image": "ghcr.io/guim31/gladys-colis:1.0.0",
+  "version": "1.0.1",
+  "docker_image": "ghcr.io/guim31/gladys-colis:1.0.1",
   "gladys_version": ">=5.1.0",
   "cover_image": "https://raw.githubusercontent.com/guim31/gladys-colis/main/cover.png",
   "categories": ["services"],
