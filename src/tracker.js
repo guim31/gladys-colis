@@ -410,9 +410,12 @@ export class Tracker {
       if (this.parcels.get(parcel.number) !== parcel) {
         continue; // removed meanwhile
       }
+      // Without 17TRACK, DHL is the only source: it gets every number.
       const wantsDhl =
         parcel.source === SOURCES.DHL ||
-        (parcel.source === null && !parcel.dhlTried && looksLikeDhl(parcel.number));
+        (parcel.source === null &&
+          !parcel.dhlTried &&
+          (looksLikeDhl(parcel.number) || !this.keyOf(SOURCES.SEVENTEEN)));
       if (wantsDhl && this.usable(SOURCES.DHL)) {
         if (!this.dhlBudgetLeft()) {
           this.dhlBudgetReached();
@@ -458,6 +461,14 @@ export class Tracker {
       }
       if (err instanceof dhl.NotFoundError) {
         await this.sourceAnswered(SOURCES.DHL);
+        if (!this.keyOf(SOURCES.SEVENTEEN)) {
+          // No other source: DHL is asked again at the pace of "not found"
+          // (a label printed, not handed over yet, is a 404 at first).
+          parcel.checkedAt = this.now();
+          outcome.changed = this.setStatus(parcel, 'not_found') || outcome.changed;
+          logger.debug(`${parcel.name}: unknown to DHL for now`);
+          return null;
+        }
         parcel.dhlTried = true;
         if (parcel.source === SOURCES.DHL) {
           // A DHL parcel DHL no longer finds: 17TRACK takes over, if any.
@@ -571,7 +582,8 @@ export class Tracker {
       !parcel.carrier ||
       !DHL_CARRIER.test(parcel.carrier) ||
       this.isDone(parcel) ||
-      !this.usable(SOURCES.DHL)
+      !this.usable(SOURCES.DHL) ||
+      !this.dhlBudgetLeft()
     ) {
       return;
     }
@@ -985,7 +997,10 @@ export class Tracker {
     }
     const hasKey = this.keyOf(SOURCES.DHL) || this.keyOf(SOURCES.SEVENTEEN);
     const noSource =
-      hasKey && !this.keyOf(SOURCES.SEVENTEEN) && parcel.source === null && parcel.dhlTried;
+      hasKey &&
+      !this.keyOf(SOURCES.SEVENTEEN) &&
+      parcel.status === 'not_found' &&
+      !looksLikeDhl(parcel.number);
     return inAllLanguages((l) => {
       const parts = [
         MESSAGES[l].added({ name: parcel.name, status: STATUS_LABELS[l][parcel.status] }),

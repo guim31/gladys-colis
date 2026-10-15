@@ -60,6 +60,29 @@ test('a DHL-shaped number DHL does not know goes to 17TRACK', async (t) => {
   assert.equal(w.api.dhlReads(number), 1, 'DHL is not asked again');
 });
 
+test('DHL alone: a number DHL does not know yet is asked again every 2 hours', async (t) => {
+  const w = await world(t, { config: { seventeentrack_key: '' } });
+  const number = '00340434000000000099';
+  const ack = await track(w, number);
+  assert.equal(parcel(w, number).status, 'not_found');
+  assert.doesNotMatch(ack.data.message.en, /No source can read/);
+  await after(w, HOUR);
+  assert.equal(w.api.dhlReads(number), 1);
+  await after(w, HOUR);
+  assert.equal(w.api.dhlReads(number), 2);
+  w.api.dhl.answers[number] = 'transit';
+  await after(w, 2 * HOUR);
+  assert.equal(parcel(w, number).status, 'in_transit');
+  assert.equal(parcel(w, number).source, 'dhl');
+});
+
+test('DHL alone: any number is asked, and the answer suggests a 17TRACK key', async (t) => {
+  const w = await world(t, { config: { seventeentrack_key: '' } });
+  const ack = await track(w, NUMBERS.inTransit);
+  assert.equal(w.api.dhlReads(NUMBERS.inTransit), 1);
+  assert.match(ack.data.message.en, /No source can read this number/);
+});
+
 test('a parcel 17TRACK says DHL carries moves to the DHL API', async (t) => {
   const w = await world(t);
   await track(w, NUMBERS.dhlCarried);
@@ -68,6 +91,14 @@ test('a parcel 17TRACK says DHL carries moves to the DHL API', async (t) => {
   assert.equal(w.api.dhlReads(NUMBERS.dhlCarried), 1);
   await after(w, HOUR);
   assert.equal(w.api.seventeenCalls('gettrackinfo', NUMBERS.dhlCarried), 1, 'read by DHL now');
+});
+
+test('the DHL allowance spent, a parcel 17TRACK says DHL carries stays on 17TRACK', async (t) => {
+  const w = await world(t);
+  w.tracker.dhlUsage = { day: '2026-10-14', count: DHL_DAILY_BUDGET };
+  await track(w, NUMBERS.dhlCarried);
+  assert.equal(w.api.dhlReads(), 0);
+  assert.equal(parcel(w, NUMBERS.dhlCarried).source, '17track');
 });
 
 test('without a DHL key, every number goes to 17TRACK', async (t) => {
