@@ -1,0 +1,168 @@
+{
+  "code": 0,
+  "data": {
+    "accepted": [
+      {
+        "number": "9400111899223197428490",
+        "carrier": 21051,
+        "param": null,
+        "tag": null,
+        "track_info": {
+          "shipping_info": {
+            "shipper_address": {
+              "country": "CN",
+              "state": null,
+              "city": null,
+              "street": null,
+              "postal_code": null,
+              "coordinates": {
+                "longitude": null,
+                "latitude": null
+              }
+            },
+            "recipient_address": {
+              "country": "FR",
+              "state": null,
+              "city": null,
+              "street": null,
+              "postal_code": null,
+              "coordinates": {
+                "longitude": null,
+                "latitude": null
+              }
+            }
+          },
+          "latest_status": {
+            "status": "Delivered",
+            "sub_status": "Delivered_Other",
+            "sub_status_descr": null
+          },
+          "latest_event": {
+            "time_iso": "2026-10-13T14:31:00-05:00",
+            "time_utc": "2026-10-13T19:31:00Z",
+            "time_raw": {
+              "date": "2026-10-13",
+              "time": "14:31:00",
+              "timezone": "-05:00"
+            },
+            "description": "Delivered, In/At Mailbox",
+            "description_translation": null,
+            "location": "CHICAGO, IL 60601",
+            "stage": "Delivered",
+            "sub_status": "Delivered_Other",
+            "address": {
+              "country": "US",
+              "state": null,
+              "city": "Chicago",
+              "street": null,
+              "postal_code": null,
+              "coordinates": {
+                "longitude": null,
+                "latitude": null
+              }
+            }
+          },
+          "time_metrics": {
+            "days_after_order": 9,
+            "days_of_transit": 9,
+            "days_of_transit_done": 9,
+            "days_after_last_update": 0,
+            "estimated_delivery_date": {
+              "source": null,
+              "from": null,
+              "to": null
+            }
+          },
+          "milestone": [],
+          "misc_info": {
+            "risk_factor": 0,
+            "service_type": null,
+            "weight_raw": null,
+            "weight_kg": null,
+            "pieces": null,
+            "dimensions": null,
+            "customer_number": null,
+            "reference_number": null,
+            "local_number": null,
+            "local_provider": null,
+            "local_key": 0
+          },
+          "tracking": {
+            "providers_hash": 987654321,
+            "providers": [
+              {
+                "provider": {
+                  "key": 21051,
+                  "name": "USPS",
+                  "alias": "USPS",
+                  "tel": null,
+                  "homepage": "https://www.usps.com",
+                  "country": "US"
+                },
+                "provider_lang": null,
+                "provider_tips": null,
+                "service_type": null,
+                "latest_sync_status": "Success",
+                "latest_sync_time": "2026-10-14T07:58:12Z",
+                "events_hash": 123456789,
+                "events": [
+                  {
+                    "time_iso": "2026-10-13T14:31:00-05:00",
+                    "time_utc": "2026-10-13T19:31:00Z",
+                    "time_raw": {
+                      "date": "2026-10-13",
+                      "time": "14:31:00",
+                      "timezone": "-05:00"
+                    },
+                    "description": "Delivered, In/At Mailbox",
+                    "description_translation": null,
+                    "location": "CHICAGO, IL 60601",
+                    "stage": "Delivered",
+                    "sub_status": "Delivered_Other",
+                    "address": {
+                      "country": "US",
+                      "state": null,
+                      "city": "Chicago",
+                      "street": null,
+                      "postal_code": null,
+                      "coordinates": {
+                        "longitude": null,
+                        "latitude": null
+                      }
+                    }
+                  },
+                  {
+                    "time_iso": "2026-10-13T07:10:00-05:00",
+                    "time_utc": "2026-10-13T12:10:00Z",
+                    "time_raw": {
+                      "date": "2026-10-13",
+                      "time": "07:10:00",
+                      "timezone": "-05:00"
+                    },
+                    "description": "Out for Delivery",
+                    "description_translation": null,
+                    "location": "CHICAGO, IL 60601",
+                    "stage": "OutForDelivery",
+                    "sub_status": "OutForDelivery_Other",
+                    "address": {
+                      "country": "US",
+                      "state": null,
+                      "city": "Chicago",
+                      "street": null,
+                      "postal_code": null,
+                      "coordinates": {
+                        "longitude": null,
+                        "latitude": null
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "rejected": []
+  }
+}

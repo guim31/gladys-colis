@@ -1,0 +1,15 @@
+{
+  "code": 0,
+  "data": {
+    "accepted": [],
+    "rejected": [
+      {
+        "number": "RR123456785CN",
+        "error": {
+          "code": -18019908,
+          "message": "The quota is not enough, please recharge."
+        }
+      }
+    ]
+  }
+}

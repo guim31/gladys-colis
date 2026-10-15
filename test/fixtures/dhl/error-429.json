@@ -1,0 +1,5 @@
+{
+  "status": 429,
+  "title": "Too many requests",
+  "detail": "Too many requests. Rate limit exceeded."
+}

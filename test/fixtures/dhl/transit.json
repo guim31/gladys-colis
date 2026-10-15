@@ -1,0 +1,89 @@
+{
+  "shipments": [
+    {
+      "serviceUrl": "https://www.dhl.de/de/privatkunden.html?piececode=00340434000000000011",
+      "rerouteUrl": "https://www.dhl.de/de/privatkunden.html?piececode=00340434000000000011&verfuegen_selected_tab=FIRST",
+      "id": "00340434000000000011",
+      "service": "parcel-de",
+      "origin": {
+        "address": {
+          "countryCode": "DE"
+        }
+      },
+      "destination": {
+        "address": {
+          "countryCode": "DE"
+        }
+      },
+      "status": {
+        "timestamp": "2026-10-13T05:12:00",
+        "statusCode": "transit",
+        "status": "The shipment has been processed in the parcel center",
+        "description": "The shipment has been processed in the parcel center",
+        "location": {
+          "address": {
+            "addressLocality": "Germany"
+          }
+        }
+      },
+      "details": {
+        "product": {
+          "productName": "DHL PAKET (parcel)"
+        },
+        "proofOfDeliverySignedAvailable": false,
+        "totalNumberOfPieces": 1,
+        "pieceIds": ["340434000000000011"],
+        "weight": {
+          "value": 2,
+          "unitText": "kg"
+        },
+        "dimensions": {
+          "width": {
+            "value": 0.3,
+            "unitText": "m"
+          },
+          "height": {
+            "value": 0.14,
+            "unitText": "m"
+          },
+          "length": {
+            "value": 0.38,
+            "unitText": "m"
+          }
+        }
+      },
+      "events": [
+        {
+          "timestamp": "2026-10-13T05:12:00",
+          "statusCode": "transit",
+          "status": "The shipment has been processed in the parcel center",
+          "description": "The shipment has been processed in the parcel center",
+          "location": {
+            "address": {
+              "addressLocality": "Germany"
+            }
+          }
+        },
+        {
+          "timestamp": "2026-10-12T19:30:00",
+          "statusCode": "pre-transit",
+          "status": "The instruction data for this shipment have been provided by the sender to DHL electronically",
+          "description": "The instruction data for this shipment have been provided by the sender to DHL electronically"
+        }
+      ],
+      "estimatedTimeOfDelivery": "2026-10-15T00:00:00Z"
+    }
+  ],
+  "possibleAdditionalShipmentsUrl": [
+    "/track/shipments?trackingNumber=00340434000000000011&service=freight",
+    "/track/shipments?trackingNumber=00340434000000000011&service=dgf",
+    "/track/shipments?trackingNumber=00340434000000000011&service=ecommerce",
+    "/track/shipments?trackingNumber=00340434000000000011&service=parcel-nl",
+    "/track/shipments?trackingNumber=00340434000000000011&service=parcel-pl",
+    "/track/shipments?trackingNumber=00340434000000000011&service=post-de",
+    "/track/shipments?trackingNumber=00340434000000000011&service=sameday",
+    "/track/shipments?trackingNumber=00340434000000000011&service=parcel-uk",
+    "/track/shipments?trackingNumber=00340434000000000011&service=ecommerce-apac",
+    "/track/shipments?trackingNumber=00340434000000000011&service=ecommerce-europe"
+  ]
+}

@@ -1,41 +1,47 @@
 // -----------------------------------------------------------------------------
-// Scene actions (SDK v0.14+, Gladys 5.1+).
+// Scene actions (manifest `scene_actions`, Gladys 5.1+). A scene action does
+// not receive the user's language: texts follow the `language` setting.
 //
-// A scene action is an OPERATION a scene author places in a scene, with
-// parameters and a result: "identify this device", "take a snapshot", "clean
-// these rooms". Each one is declared in the manifest `scene_actions` field
-// (key, label, `fields` in the config_schema grammar, scalar `outputs`) and
-// handled here, keyed by that same `key`; index.js registers every entry with
-// `gladys.onSceneAction(key, ...)`.
+// - track_parcel: adds a parcel from a scene. The number field takes a whole
+//   text too (the subject of a mail passed by a mail integration, a message):
+//   the first tracking number found in it is used. Throwing fails this action
+//   only, which the scene logs.
+// - untrack_parcel: stops tracking a parcel, by number or by name; `removed`
+//   says whether one was found (a scene action is never a condition).
+// - read_parcels: a sentence for a message or a voice announcement, and the
+//   counts for a "Continue only if".
 //
-// Scene TRIGGERS are the other direction ("this happened"): they are fired by
-// the device that observes the event, see src/devices/motionSensor.js.
-//
-// The rules that matter:
-//   - `fields` arrive RESOLVED: scene variables substituted, defaults applied,
-//     validated by the core; a `"source": "devices"` field is the chosen
-//     device external_id;
-//   - resolve an object of the declared `outputs` (scalars only), readable by
-//     the following actions of the scene, or `undefined` for none. Keys not
-//     declared in the manifest are dropped by the core;
-//   - throwing fails THIS action only: the scene logs it and continues. A
-//     scene action is never a condition: return an output and let the scene
-//     author gate on it;
-//   - never fire a scene event as a consequence of a received action: a scene
-//     bound to that event would loop through the integration.
+// Outputs are numbers, never booleans: the core's "Continue only if" compares
+// with ===, and its value field only produces numbers and strings.
 // -----------------------------------------------------------------------------
 
-import { createLogger } from '@gladysassistant/integration-sdk';
-import { signalDevice } from './devices/index.js';
-
-const logger = createLogger({ name: 'scenes' });
+import { pick, STATUS_LABELS } from './texts.js';
 
 export const SCENE_ACTIONS = {
-  // The ack is awaited under the action's `timeout_seconds` (15 s in the
-  // manifest), counted from the moment the scene reaches the action.
-  async identify_device(gladys, { fields, config }) {
-    logger.info(`Scene action identify_device <- ${fields.device}`);
-    const signalled = await signalDevice(gladys, fields.device, config);
-    return { signalled };
+  async track_parcel(tracker, { fields }) {
+    const { parcel, isNew } = await tracker.track(fields.number, fields.name, { extract: true });
+    return {
+      number: parcel.number,
+      name: parcel.name,
+      status: pick(STATUS_LABELS, tracker.config.language)[parcel.status],
+      carrier: parcel.carrier ?? '',
+      added: isNew ? 1 : 0,
+    };
+  },
+
+  async untrack_parcel(tracker, { fields }) {
+    const parcel = await tracker.untrack(fields.parcel);
+    return { removed: parcel ? 1 : 0, name: parcel?.name ?? '' };
+  },
+
+  async read_parcels(tracker) {
+    const counts = tracker.counts();
+    return {
+      text: tracker.sentence(),
+      in_progress: counts.in_progress,
+      out_for_delivery: counts.out_for_delivery,
+      awaiting_pickup: counts.awaiting_pickup,
+      problems: counts.problems,
+    };
   },
 };

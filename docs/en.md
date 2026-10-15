@@ -1,61 +1,177 @@
-# Demo Devices Template
+# Parcel tracking (17TRACK, DHL)
 
-This is the user documentation of the integration. Gladys re-hosts this file
-and shows a permanent **Documentation** link to it in the Configuration screen
-(in the user's language, with English as the fallback) — it is when
-configuring that the user needs it most. Keep the short onboarding hints in
-the `section` blocks of the manifest `config_schema`; put the long
-step-by-step (screenshots, troubleshooting…) here.
+Track your parcels from **every carrier** in Gladys, at home and abroad: UPS, FedEx, USPS, DHL, Deutsche Post, GLS,
+DPD, Royal Mail, the postal services of the whole world, the parcels shipped from China (Cainiao, YunExpress…) and
+more than 3,000 others, like the parcel tracking apps.
 
-## What you get
+> **Developed without a 17TRACK or DHL account**: feedback welcome on the
+> [Gladys forum](https://community.gladysassistant.com/). The answers of both APIs were simulated from their
+> documentation.
 
-Six demo devices show up after installation: a weather station (real data
-from Open-Meteo), a switch, a dimmable light, a smart plug with power
-metering, a motion sensor and a camera.
+For your **La Poste, Colissimo and Chronopost** parcels, prefer the
+[La Poste](https://github.com/guim31/gladys-laposte) integration (`guim31/gladys-laposte`), which reads the official
+La Poste API.
+
+This integration is not affiliated with the carriers or 17TRACK.
+
+## What it does
+
+- You add a parcel by its tracking number, and a name if you like ("Running shoes"), from the configuration or from
+  a scene. The carrier is recognized from the number.
+- Two sources, each turned on by its free key:
+  - **DHL**, through its official API, for the DHL and Deutsche Post numbers;
+  - **17TRACK** for everything else: it recognizes the carrier and gathers the events of every carrier along the way
+    (China Post then La Poste, for example) into one timeline.
+- Each parcel becomes a **device** in Gladys: status, last event, place, date, carrier and expected delivery date.
+- The status is **the same for every carrier**: registered, in transit, out for delivery, to pick up, problem,
+  delivered. The carrier's original text (often English or German) stays visible as a detail.
+- The "My parcels" widget lists your parcels, the ones waiting for you first.
+- Three scene triggers (out for delivery, delivered, a parcel needs you) and three scene actions (track a parcel,
+  stop tracking a parcel, read my parcels).
+- A delivered parcel is archived by itself after 7 days (adjustable).
+
+## Requirements
+
+- Gladys 5.1.0 or later, with Internet access.
+- At least one of the two keys, both free:
+  - **17TRACK** (every carrier): create an account on [api.17track.net](https://api.17track.net/en), then copy the
+    key in **Settings → Security → Access key**. If you turn on the IP whitelist, add your router's public address
+    to it, otherwise 17TRACK refuses the key.
+  - **DHL** (DHL and Deutsche Post parcels): create an account on
+    [developer.dhl.com](https://developer.dhl.com/), create an app with the **Shipment Tracking - Unified** API, and
+    copy its **API Key** (not the secret).
+- Both together give the best result: DHL reads its own parcels, 17TRACK does the rest.
 
 ## Configuration
 
-1. Open the **Configuration** tab of the integration.
-2. Set the **latitude** and **longitude** the demo weather station should
-   observe (they default to Paris), and pick your temperature unit.
-   The **refresh interval** sets how often the weather station and the
-   plug's power are read: every 5 minutes by default, every minute at most.
-3. Save: the devices appear in the **Discovery** tab, ready to be added.
+Install the integration from **Integrations → Install from GitHub** with the address
+`https://github.com/guim31/gladys-colis`, then open its configuration.
 
-The **Prefer the local connection** toggle drives the demo plug: it reports
-the channel it actually uses as a badge (local or cloud), with an orange dot
-when it runs degraded (local refused, cloud fallback).
+| Setting                | Default | Role                                                                           |
+| ---------------------- | ------- | ------------------------------------------------------------------------------ |
+| 17TRACK API key        | (empty) | Your 17TRACK key. It never appears in the logs.                                |
+| DHL API key            | (empty) | The API Key of your DHL app. It never appears in the logs.                     |
+| Keep delivered parcels | 7 days  | A delivered parcel is archived after this time (1 to 30 days).                 |
+| Language               | French  | Language of the statuses, of the feature names of new devices and of messages. |
 
-## Actions
+The configuration actions:
 
-- **Test the weather provider** — performs a live request to Open-Meteo and
-  shows the current temperature and humidity under the button.
-- **Identify a device** — pick one of your devices in the list and it will
-  signal itself (the demo light "blinks" in the logs).
+- **Track a parcel**: the tracking number (spaces, dots and dashes are fine) and an optional name. The parcel is
+  read at once. The same number with another name renames the parcel. Then create its device in the **Discover**
+  tab.
+- **Stop tracking a parcel**: by its name or number. Its device stays in Gladys: delete it from the device page.
+- **Read the parcels now**: reads every parcel on the way at once, checks the keys, and shows the 17TRACK quota left
+  and the DHL requests used today.
 
-## Scenes
+## Quotas and reading pace
 
-The integration adds its own cards to the scene editor (Gladys 5.1 or
-later), under the **Integrations** category:
+The integration reads each parcel at a pace that follows its status, never beyond the free plans:
 
-- **Motion detected** (trigger) — starts the scene when a demo motion sensor
-  sees something move. Optionally pick the sensor and what moved (person,
-  animal); left empty, any detection matches. The following actions can
-  read what moved with `{{triggerEvent.data.target}}`.
-- **Identify a device** (action) — makes the chosen device signal itself.
-  It returns whether the device could signal itself, so the following
-  actions can depend on it.
+| Status                    | Reading          |
+| ------------------------- | ---------------- |
+| Out for delivery          | every 15 minutes |
+| In transit, problem       | every hour       |
+| To pick up, not found yet | every 2 hours    |
+| Registered                | every 3 hours    |
+| Delivered                 | never again      |
 
-## Dashboard
+- **DHL**: the free plan allows 250 requests a day and one every 5 seconds. The integration stops at 240 a day,
+  spaces its requests by 5 seconds, and slows down when many DHL parcels share the day (20 DHL parcels in transit:
+  a little over 2 hours between two readings). Once the 240 requests are made, the DHL parcels wait for the next
+  day (midnight UTC).
+- **17TRACK**: only the **registration** of a new number spends quota, once per parcel; the readings after it are
+  free and batched (40 numbers per request, 3 requests per second at most). The free plan gives a limited number of
+  registrations: according to the 17TRACK help center, 200 numbers granted once to the accounts opened since January
+  2026 (100 a month on older accounts). Check your 17TRACK dashboard: the "Read the parcels now" action shows what is
+  left. A parcel archived then tracked again spends nothing.
+- 17TRACK reads the carriers on its side: right after the registration, the first events can take a few minutes.
 
-Add the **Demo status** widget to a dashboard: it shows the live
-temperature of the weather station and the power of the office plug, the
-connection the plug currently uses (orange when degraded) and the observed
-location. Its **Identify the light** button makes the demo light signal
-itself.
+## The devices
+
+One device per parcel, named after the parcel ("Running shoes (1Z999AA10123456784)"), to create in the **Discover**
+tab. Its features, all read only:
+
+| Feature           | Content                                                                                               |
+| ----------------- | ----------------------------------------------------------------------------------------------------- |
+| Status            | Not read yet, Not found yet, Registered, In transit, Out for delivery, To pick up, Problem, Delivered |
+| Last event        | The carrier's text, as it sends it                                                                    |
+| Place             | The place of the last event                                                                           |
+| Event date        | Date and time of the last event                                                                       |
+| Carrier           | UPS, DHL Paket, La Poste, Cainiao…                                                                    |
+| Expected delivery | The date the carrier announces, if any                                                                |
+
+A dash (—) stands for what the carrier does not say. The feature names take the language chosen when the device is
+created.
+
+When the parcel is archived, it leaves the Discover tab but its device stays in Gladys with its last values: delete
+it when you no longer need it (Gladys does not let an integration delete a device).
+
+## The widget
+
+Add the **My parcels** widget to your dashboard. It lists up to 8 parcels: first the ones out for delivery, to pick
+up or with a problem, then the others. Each line gives the name, the last event and its date, and a colored status
+badge. A tap opens the details: carrier, number, expected delivery date, history of the events and a link to the
+tracking page. A line at the bottom reports a refused key, a quota reached or a service that does not answer.
+
+## Scene triggers
+
+| Trigger                      | When                                                                                                        |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| A parcel is out for delivery | The courier has the parcel for today's round.                                                               |
+| A parcel is delivered        | The carrier reports the parcel delivered (not for a parcel already delivered when added).                   |
+| A parcel needs you           | The parcel waits at a pickup point or a locker, or has a problem (failed delivery, customs, delay, return). |
+
+Each trigger can be limited to one parcel (empty: every parcel). "A parcel needs you" can also be limited to one
+reason: "To pick up" or "Problem". The information passed to the scene actions: parcel name, number, carrier,
+status, last event, place and tracking page (and the reason).
+
+A trigger fires once per status change: a restart of Gladys or of the integration does not fire it again.
+
+## Scene actions
+
+- **Track a parcel**: adds a parcel. The number field also takes a whole text, such as the subject of an order
+  confirmation mail: the first tracking number in it is used. Results: number, name, status, carrier, and "New
+  parcel" (1 or 0).
+- **Stop tracking a parcel**: by its name or number. Result "Removed": 1, or 0 when no parcel matches.
+- **Read my parcels**: a sentence such as "You have 2 parcels on the way: Shoes, out for delivery today; Book,
+  waiting to be picked up.", and the numbers of parcels on the way, out for delivery, to pick up and with a problem.
+
+## Scene examples
+
+- **The courier is coming**: trigger "A parcel is out for delivery", action "Send a message": "The parcel {parcel
+  name} arrives today ({carrier})". Add a presence condition to warn only when nobody is home.
+- **Remember the pickup point**: trigger "A parcel needs you", reason "To pick up", then a message "{parcel name} is
+  waiting for you: {last event}".
+- **Morning summary**: time trigger at 8 am, action "Read my parcels", then "Continue only if" parcels on the way
+  > 0, and a voice announcement of the sentence.
+- **Automatic tracking from your mails**: with a mail integration, pass the subject of the shipping mail to the
+  "Track a parcel" action.
 
 ## Troubleshooting
 
-The integration logs everything it does: check the integration logs from the
-Gladys UI (or `docker logs` on the host) with `LOG_LEVEL=debug` for the full
-detail.
+- **"17TRACK refuses the API key"**: check the key (Settings → Security). If the IP whitelist is on at 17TRACK, add
+  your router's public address, or turn it off.
+- **"DHL refuses the API key"**: copy the app's **API Key** (not the "API Secret") and check the app has the
+  "Shipment Tracking - Unified" API.
+- **A parcel stays "Not found yet"**: the sender created the label but has not handed the parcel over yet, or 17TRACK
+  does not recognize the carrier. The integration tries again, then archives the number after 30 days.
+- **"17TRACK quota reached"**: no free registration is left on your account; the parcels already tracked are still
+  read. Remove the parcels you no longer need.
+- **"DHL daily allowance used"**: the 240 requests of the day are made; the DHL parcels resume at midnight UTC.
+- **The device shows nothing**: create it in the Discover tab, then wait for the next reading or use "Read the
+  parcels now".
+- For more details, set the log level to `debug` (variable `LOG_LEVEL=debug`): every reading is described there,
+  never with the keys.
+
+## Limits
+
+- Developed without a 17TRACK or DHL account: the answers were simulated from the documentation of both APIs. The
+  first real feedback is expected.
+- DHL's "Out for delivery" and "To pick up" statuses are inferred from the text of the event (English or German): a
+  new wording can stay classified "In transit".
+- The texts of the events stay in the carrier's language.
+- The triggers follow the reading pace: "out for delivery" can come up to an hour after the courier took the parcel.
+- 40 tracked parcels at most.
+- UPS, FedEx and USPS have official APIs too, but they ask for a business account and an OAuth authentication: these
+  carriers go through 17TRACK.
+- The carriers that ask for a postal code or a phone number to track a parcel are not supported.

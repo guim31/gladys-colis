@@ -1,0 +1,193 @@
+{
+  "code": 0,
+  "data": {
+    "accepted": [
+      {
+        "number": "1Z999AA10123456784",
+        "carrier": 100002,
+        "param": null,
+        "tag": null,
+        "track_info": {
+          "shipping_info": {
+            "shipper_address": {
+              "country": "CN",
+              "state": null,
+              "city": null,
+              "street": null,
+              "postal_code": null,
+              "coordinates": {
+                "longitude": null,
+                "latitude": null
+              }
+            },
+            "recipient_address": {
+              "country": "FR",
+              "state": null,
+              "city": null,
+              "street": null,
+              "postal_code": null,
+              "coordinates": {
+                "longitude": null,
+                "latitude": null
+              }
+            }
+          },
+          "latest_status": {
+            "status": "OutForDelivery",
+            "sub_status": "OutForDelivery_Other",
+            "sub_status_descr": null
+          },
+          "latest_event": {
+            "time_iso": "2026-10-14T08:12:00-04:00",
+            "time_utc": "2026-10-14T12:12:00Z",
+            "time_raw": {
+              "date": "2026-10-14",
+              "time": "08:12:00",
+              "timezone": "-04:00"
+            },
+            "description": "Out For Delivery Today",
+            "description_translation": null,
+            "location": "Atlanta, GA, US",
+            "stage": "OutForDelivery",
+            "sub_status": "OutForDelivery_Other",
+            "address": {
+              "country": "US",
+              "state": null,
+              "city": "Atlanta",
+              "street": null,
+              "postal_code": null,
+              "coordinates": {
+                "longitude": null,
+                "latitude": null
+              }
+            }
+          },
+          "time_metrics": {
+            "days_after_order": 9,
+            "days_of_transit": 9,
+            "days_of_transit_done": 9,
+            "days_after_last_update": 0,
+            "estimated_delivery_date": {
+              "source": "Official",
+              "from": "2026-10-14T00:00:00-04:00",
+              "to": "2026-10-14T23:59:00-04:00"
+            }
+          },
+          "milestone": [],
+          "misc_info": {
+            "risk_factor": 0,
+            "service_type": null,
+            "weight_raw": null,
+            "weight_kg": null,
+            "pieces": null,
+            "dimensions": null,
+            "customer_number": null,
+            "reference_number": null,
+            "local_number": null,
+            "local_provider": null,
+            "local_key": 0
+          },
+          "tracking": {
+            "providers_hash": 987654321,
+            "providers": [
+              {
+                "provider": {
+                  "key": 100002,
+                  "name": "UPS",
+                  "alias": "UPS",
+                  "tel": null,
+                  "homepage": "https://www.ups.com",
+                  "country": "US"
+                },
+                "provider_lang": null,
+                "provider_tips": null,
+                "service_type": null,
+                "latest_sync_status": "Success",
+                "latest_sync_time": "2026-10-14T07:58:12Z",
+                "events_hash": 123456789,
+                "events": [
+                  {
+                    "time_iso": "2026-10-14T08:12:00-04:00",
+                    "time_utc": "2026-10-14T12:12:00Z",
+                    "time_raw": {
+                      "date": "2026-10-14",
+                      "time": "08:12:00",
+                      "timezone": "-04:00"
+                    },
+                    "description": "Out For Delivery Today",
+                    "description_translation": null,
+                    "location": "Atlanta, GA, US",
+                    "stage": "OutForDelivery",
+                    "sub_status": "OutForDelivery_Other",
+                    "address": {
+                      "country": "US",
+                      "state": null,
+                      "city": "Atlanta",
+                      "street": null,
+                      "postal_code": null,
+                      "coordinates": {
+                        "longitude": null,
+                        "latitude": null
+                      }
+                    }
+                  },
+                  {
+                    "time_iso": "2026-10-14T03:40:00-04:00",
+                    "time_utc": "2026-10-14T07:40:00Z",
+                    "time_raw": {
+                      "date": "2026-10-14",
+                      "time": "03:40:00",
+                      "timezone": "-04:00"
+                    },
+                    "description": "Arrived at Facility",
+                    "description_translation": null,
+                    "location": "Atlanta, GA, US",
+                    "stage": "Arrival",
+                    "sub_status": "InTransit_Arrival",
+                    "address": {
+                      "country": "US",
+                      "state": null,
+                      "city": "Atlanta",
+                      "street": null,
+                      "postal_code": null,
+                      "coordinates": {
+                        "longitude": null,
+                        "latitude": null
+                      }
+                    }
+                  },
+                  {
+                    "time_iso": "2026-10-12T18:05:00-04:00",
+                    "time_utc": "2026-10-12T22:05:00Z",
+                    "time_raw": {
+                      "date": "2026-10-12",
+                      "time": "18:05:00",
+                      "timezone": "-04:00"
+                    },
+                    "description": "Shipper created a label, UPS has not received the package yet.",
+                    "description_translation": null,
+                    "location": null,
+                    "stage": "InfoReceived",
+                    "sub_status": "InfoReceived",
+                    "address": {
+                      "country": null,
+                      "state": null,
+                      "city": null,
+                      "street": null,
+                      "postal_code": null,
+                      "coordinates": {
+                        "longitude": null,
+                        "latitude": null
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "rejected": []
+  }
+}

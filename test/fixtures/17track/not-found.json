@@ -1,0 +1,75 @@
+{
+  "code": 0,
+  "data": {
+    "accepted": [
+      {
+        "number": "TBA123456789000",
+        "carrier": 0,
+        "param": null,
+        "tag": null,
+        "track_info": {
+          "shipping_info": {
+            "shipper_address": {
+              "country": "CN",
+              "state": null,
+              "city": null,
+              "street": null,
+              "postal_code": null,
+              "coordinates": {
+                "longitude": null,
+                "latitude": null
+              }
+            },
+            "recipient_address": {
+              "country": "FR",
+              "state": null,
+              "city": null,
+              "street": null,
+              "postal_code": null,
+              "coordinates": {
+                "longitude": null,
+                "latitude": null
+              }
+            }
+          },
+          "latest_status": {
+            "status": "NotFound",
+            "sub_status": "NotFound_Other",
+            "sub_status_descr": null
+          },
+          "latest_event": null,
+          "time_metrics": {
+            "days_after_order": 9,
+            "days_of_transit": 9,
+            "days_of_transit_done": 9,
+            "days_after_last_update": 0,
+            "estimated_delivery_date": {
+              "source": null,
+              "from": null,
+              "to": null
+            }
+          },
+          "milestone": [],
+          "misc_info": {
+            "risk_factor": 0,
+            "service_type": null,
+            "weight_raw": null,
+            "weight_kg": null,
+            "pieces": null,
+            "dimensions": null,
+            "customer_number": null,
+            "reference_number": null,
+            "local_number": null,
+            "local_provider": null,
+            "local_key": 0
+          },
+          "tracking": {
+            "providers_hash": 987654321,
+            "providers": []
+          }
+        }
+      }
+    ],
+    "rejected": []
+  }
+}

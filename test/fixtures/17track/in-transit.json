@@ -1,0 +1,257 @@
+{
+  "code": 0,
+  "data": {
+    "accepted": [
+      {
+        "number": "RR123456785CN",
+        "carrier": 3011,
+        "param": null,
+        "tag": null,
+        "track_info": {
+          "shipping_info": {
+            "shipper_address": {
+              "country": "CN",
+              "state": null,
+              "city": null,
+              "street": null,
+              "postal_code": null,
+              "coordinates": {
+                "longitude": null,
+                "latitude": null
+              }
+            },
+            "recipient_address": {
+              "country": "FR",
+              "state": null,
+              "city": null,
+              "street": null,
+              "postal_code": null,
+              "coordinates": {
+                "longitude": null,
+                "latitude": null
+              }
+            }
+          },
+          "latest_status": {
+            "status": "InTransit",
+            "sub_status": "InTransit_Arrival",
+            "sub_status_descr": null
+          },
+          "latest_event": {
+            "time_iso": "2026-10-13T06:41:00+02:00",
+            "time_utc": "2026-10-13T04:41:00Z",
+            "time_raw": {
+              "date": "2026-10-13",
+              "time": "06:41:00",
+              "timezone": "+02:00"
+            },
+            "description": "Votre colis est arrivé en France. Il est en cours d'acheminement.",
+            "description_translation": null,
+            "location": "ROISSY CHARLES DE GAULLE",
+            "stage": "Arrival",
+            "sub_status": "InTransit_Arrival",
+            "address": {
+              "country": "FR",
+              "state": null,
+              "city": "Roissy",
+              "street": null,
+              "postal_code": null,
+              "coordinates": {
+                "longitude": null,
+                "latitude": null
+              }
+            }
+          },
+          "time_metrics": {
+            "days_after_order": 9,
+            "days_of_transit": 9,
+            "days_of_transit_done": 9,
+            "days_after_last_update": 0,
+            "estimated_delivery_date": {
+              "source": "Official",
+              "from": "2026-10-16T00:00:00+02:00",
+              "to": "2026-10-18T00:00:00+02:00"
+            }
+          },
+          "milestone": [
+            {
+              "key_stage": "InfoReceived",
+              "time_iso": null,
+              "time_utc": null
+            },
+            {
+              "key_stage": "PickedUp",
+              "time_iso": null,
+              "time_utc": null
+            },
+            {
+              "key_stage": "Departure",
+              "time_iso": null,
+              "time_utc": null
+            },
+            {
+              "key_stage": "Arrival",
+              "time_iso": null,
+              "time_utc": null
+            }
+          ],
+          "misc_info": {
+            "risk_factor": 0,
+            "service_type": null,
+            "weight_raw": null,
+            "weight_kg": null,
+            "pieces": null,
+            "dimensions": null,
+            "customer_number": null,
+            "reference_number": null,
+            "local_number": null,
+            "local_provider": null,
+            "local_key": 0
+          },
+          "tracking": {
+            "providers_hash": 987654321,
+            "providers": [
+              {
+                "provider": {
+                  "key": 6051,
+                  "name": "La Poste",
+                  "alias": "La Poste",
+                  "tel": null,
+                  "homepage": "https://www.laposte.fr",
+                  "country": "FR"
+                },
+                "provider_lang": null,
+                "provider_tips": null,
+                "service_type": null,
+                "latest_sync_status": "Success",
+                "latest_sync_time": "2026-10-14T07:58:12Z",
+                "events_hash": 123456789,
+                "events": [
+                  {
+                    "time_iso": "2026-10-13T06:41:00+02:00",
+                    "time_utc": "2026-10-13T04:41:00Z",
+                    "time_raw": {
+                      "date": "2026-10-13",
+                      "time": "06:41:00",
+                      "timezone": "+02:00"
+                    },
+                    "description": "Votre colis est arrivé en France. Il est en cours d'acheminement.",
+                    "description_translation": null,
+                    "location": "ROISSY CHARLES DE GAULLE",
+                    "stage": "Arrival",
+                    "sub_status": "InTransit_Arrival",
+                    "address": {
+                      "country": "FR",
+                      "state": null,
+                      "city": "Roissy",
+                      "street": null,
+                      "postal_code": null,
+                      "coordinates": {
+                        "longitude": null,
+                        "latitude": null
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "provider": {
+                  "key": 3011,
+                  "name": "China Post",
+                  "alias": "China Post",
+                  "tel": null,
+                  "homepage": "http://www.chinapost.com.cn",
+                  "country": "CN"
+                },
+                "provider_lang": null,
+                "provider_tips": null,
+                "service_type": null,
+                "latest_sync_status": "Success",
+                "latest_sync_time": "2026-10-14T07:58:12Z",
+                "events_hash": 123456789,
+                "events": [
+                  {
+                    "time_iso": "2026-10-05T16:20:00+08:00",
+                    "time_utc": "2026-10-05T08:20:00Z",
+                    "time_raw": {
+                      "date": "2026-10-05",
+                      "time": "16:20:00",
+                      "timezone": "+08:00"
+                    },
+                    "description": "Departed from facility",
+                    "description_translation": null,
+                    "location": "Shenzhen",
+                    "stage": "Departure",
+                    "sub_status": "InTransit_Departure",
+                    "address": {
+                      "country": "CN",
+                      "state": null,
+                      "city": "Shenzhen",
+                      "street": null,
+                      "postal_code": null,
+                      "coordinates": {
+                        "longitude": null,
+                        "latitude": null
+                      }
+                    }
+                  },
+                  {
+                    "time_iso": "2026-10-04T11:02:00+08:00",
+                    "time_utc": "2026-10-04T03:02:00Z",
+                    "time_raw": {
+                      "date": "2026-10-04",
+                      "time": "11:02:00",
+                      "timezone": "+08:00"
+                    },
+                    "description": "Acceptance",
+                    "description_translation": null,
+                    "location": "Shenzhen",
+                    "stage": "PickedUp",
+                    "sub_status": "InTransit_PickedUp",
+                    "address": {
+                      "country": "CN",
+                      "state": null,
+                      "city": "Shenzhen",
+                      "street": null,
+                      "postal_code": null,
+                      "coordinates": {
+                        "longitude": null,
+                        "latitude": null
+                      }
+                    }
+                  },
+                  {
+                    "time_iso": "2026-10-03T09:00:00+08:00",
+                    "time_utc": "2026-10-03T01:00:00Z",
+                    "time_raw": {
+                      "date": "2026-10-03",
+                      "time": "09:00:00",
+                      "timezone": "+08:00"
+                    },
+                    "description": "Shipment information received",
+                    "description_translation": null,
+                    "location": null,
+                    "stage": "InfoReceived",
+                    "sub_status": "InfoReceived",
+                    "address": {
+                      "country": null,
+                      "state": null,
+                      "city": null,
+                      "street": null,
+                      "postal_code": null,
+                      "coordinates": {
+                        "longitude": null,
+                        "latitude": null
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "rejected": []
+  }
+}

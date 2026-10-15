@@ -32,15 +32,24 @@ pushing.
 
 ```
 index.js                          SDK wiring only: handlers registered before connect()
-src/devices/index.js              registry of the device blueprints + dispatch helpers
-src/devices/<type>.js             one device type per file (buildDevice, onPoll, onSetValue...)
+src/app.js                        registers every handler on the tracker (tests use the same wiring)
+src/tracker.js                    parcels, sources, reading timer and pace, states, triggers, action answers
+src/seventeentrack.js             17TRACK tracking API v2.2 client (register, gettrackinfo, deletetrack, getquota)
+src/dhl.js                        DHL "Shipment Tracking - Unified" client
+src/errors.js                     SourceError (invalid_key, quota, unavailable) and small parsers
+src/status.js                     the normalized statuses, from 17TRACK and DHL; status -> scene trigger
+src/numbers.js                    tracking number validation, extraction from a text, DHL shapes
+src/device.js                     one device per parcel (six text/text features)
 src/scenes.js                     scene action handlers (manifest `scene_actions`)
-src/widgets.js                    dashboard widget handlers (manifest `widgets`)
+src/widgets.js                    dashboard widget handler (manifest `widgets`)
+src/texts.js                      every text of the container, en/fr/de/es
+src/store.js                      /data/parcels.json (parcels, archive, DHL requests of the day)
 src/config.js                     DEFAULT_CONFIG (mirrors the manifest defaults) + normalization
-src/weather.js                    example driver (Open-Meteo)
+scripts/probe.mjs                 read-only probe of the real APIs (fake keys: clean refusal expected)
 gladys-assistant-integration.json manifest: name, config_schema, actions, image...
-docs/en.md, docs/fr.md            user documentation, re-hosted by Gladys (mandatory)
-test/                             node --test, against the SDK's fake Gladys (integration-sdk/testing)
+docs/{en,fr,de,es}.md             user documentation, re-hosted by Gladys (en and fr mandatory)
+test/                             node --test, against the SDK's fake Gladys and simulated APIs
+test/fixtures/{17track,dhl}/      API answers (origin in test/fixtures/README.md)
 .github/scripts/release.mjs       release helpers (manifest bump, changelog), tested in test/
 ```
 
@@ -70,8 +79,9 @@ test/                             node --test, against the SDK's fake Gladys (in
   `type: "provider"`: 5.1.0). `test/manifest.test.js` ties the manifest to the
   code (defaults, action, scene and widget handlers): change both sides
   together.
-- **User-facing text** is bilingual (English and French): action messages,
-  manifest texts, and `docs/en.md` / `docs/fr.md`, kept in sync.
+- **User-facing text** exists in English, French, German ("du") and Spanish
+  ("usted"): action messages, manifest texts, widget texts, feature names and
+  `docs/{en,fr,de,es}.md`, kept in sync. `test/i18n.test.js` checks it.
 - **Style.** Prettier formats, ESLint catches mistakes. Comments explain why,
   in English. Tests never touch the network.
 
@@ -233,3 +243,34 @@ long, et sur un « Sie »/« Ihr… » de politesse en allemand. Le store exige 
 - Docs `en`, `fr`, `de`, `es` avec les mêmes sections.
 - Chauffe, ouverture, sécurité : ne rien rendre pilotable « comme un thermostat » ou par un assistant
   vocal quand une erreur serait dangereuse (leçon d'OctoPrint).
+
+## Intégration Suivi de colis (15/10/2026)
+
+- **17TRACK, API de suivi v2.2** : `POST https://api.17track.net/track/v2.2/<endpoint>`, en-tête `17token`, corps =
+  liste de `{ number }` (40 au plus). `register` est **le seul appel qui consomme du quota** (une fois par numéro) ;
+  `gettrackinfo`, `deletetrack`, `getquota` sont gratuits. Limite 3 requêtes/s. Réponse `{ code, data: { accepted,
+rejected: [{ number, error: { code } }] } }`, refus global : `code` ≠ 0 et `data.errors`. Codes utiles :
+  -18019901 déjà enregistré (pas une erreur), -18019902 pas enregistré (réenregistrer), -18019903 transporteur non
+  détecté (réessayer 24 h plus tard), -18019907/-18019908 quota, -18010001 IP hors liste blanche (une option du
+  compte 17TRACK : à dire dans la doc), -18010002 clé invalide. La v2.4 existe avec la même structure `track_info`.
+  Offre gratuite : contradictoire selon les pages d'aide (200 numéros une fois pour les comptes ouverts depuis
+  janvier 2026, 100/mois avant) : ne pas l'écrire comme certain.
+- **DHL Unified** : `GET https://api-eu.dhl.com/track/shipments?trackingNumber=…&language=…`, en-tête
+  `DHL-API-Key`. 250 requêtes/jour, une toutes les 5 s (certaines pages disent 1/s : on garde 5 s). Erreurs
+  problem+json `{ status, title, detail }`, 404 = numéro inconnu (pas une panne), 400 = forme refusée. `statusCode` ne
+  vaut que `pre-transit`, `transit`, `delivered`, `failure`, `unknown` : « en livraison » et « à retirer » se lisent
+  dans le texte (`src/status.js`, anglais et allemand). Les `timestamp` arrivent parfois **sans fuseau** : lus en
+  heure locale (TZ de Gladys).
+- **Choix de la source** : DHL d'abord pour un numéro de forme DHL (`looksLikeDhl`) ; un 404 le passe à 17TRACK, qui
+  sait tout. Un colis que 17TRACK dit « DHL » est relu une fois chez DHL (`preferDhl`). Clé DHL refusée ou quota DHL
+  épuisé : un nouveau numéro passe par 17TRACK.
+- **Un appareil par colis** (demande de la consigne), `externalIds('parcel', numéro)`. Contrepartie (le choix inverse
+  de gladys-laposte) : le SDK ne peut pas supprimer d'appareil, un colis archivé laisse son appareil, que
+  l'utilisateur supprime. L'archivage le retire de l'onglet Découverte.
+- **Budget DHL** : compteur par jour UTC dans `/data` (240 au plus), et l'intervalle s'étire à
+  `24 h × colis DHL / 200` pour laisser de la place aux lectures forcées.
+- **Aucune réponse réelle** n'a pu être relevée (proxy de la session : `api.17track.net`, `api-eu.dhl.com`,
+  `developer.dhl.com` refusés, même par WebFetch). `scripts/probe.mjs` doit être lancé depuis une machine qui a le
+  réseau ; les fixtures 17TRACK sont reconstruites d'après le schéma.
+- Le validateur de langue espagnole ne cherche que des formes sans ambiguïté (« tú », « tienes »…) : « añade »,
+  « elige » sont aussi des formes de « usted ».

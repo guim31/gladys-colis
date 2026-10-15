@@ -1,177 +1,903 @@
 {
   "manifest_version": 1,
   "type": "device",
-  "name": "Demo Devices Template",
+  "name": "Parcel tracking (17TRACK, DHL)",
   "description": {
-    "en": "Starter template showing sensors, a switch, a dimmable light and a smart plug.",
-    "fr": "Template de démarrage : capteurs, interrupteur, lampe variable et prise connectée."
+    "en": "Track parcels from every carrier worldwide with 17TRACK and the official DHL API.",
+    "fr": "Suivez vos colis de tous les transporteurs du monde avec 17TRACK et l'API officielle DHL.",
+    "de": "Verfolge Sendungen aller Zusteller weltweit mit 17TRACK und der offiziellen DHL-API.",
+    "es": "Siga sus paquetes de todos los transportistas del mundo con 17TRACK y la API oficial de DHL."
   },
   "version": "1.0.0",
-  "docker_image": "ghcr.io/gladysassistant/integration-template-js:1.0.0",
+  "docker_image": "ghcr.io/guim31/gladys-colis:1.0.0",
   "gladys_version": ">=5.1.0",
-  "cover_image": "https://raw.githubusercontent.com/GladysAssistant/integration-template-js/master/cover.png",
-  "categories": ["lighting", "security", "environment"],
-  "transports": ["local", "cloud"],
+  "cover_image": "https://raw.githubusercontent.com/guim31/gladys-colis/main/cover.png",
+  "categories": ["services"],
+  "transports": ["cloud"],
   "config_schema": [
     {
       "key": "intro",
       "type": "section",
-      "label": { "en": "Getting started", "fr": "Pour commencer" },
+      "label": {
+        "en": "Your free API keys",
+        "fr": "Vos clés d'API gratuites",
+        "de": "Deine kostenlosen API-Schlüssel",
+        "es": "Sus claves de API gratuitas"
+      },
       "description": {
-        "en": "The demo weather station reads real data from the free Open-Meteo API: pick the coordinates to observe. No account, no API key.",
-        "fr": "La station météo de démonstration lit de vraies données via l'API gratuite Open-Meteo : choisissez les coordonnées à observer. Pas de compte, pas de clé d'API."
+        "en": "Enter a 17TRACK key (every carrier, detected from the number), a DHL key, or both. Then use \"Track a parcel\" and create the devices in the Discover tab. For La Poste, prefer the La Poste integration. Not affiliated with the carriers or 17TRACK.",
+        "fr": "Saisissez une clé 17TRACK (tous transporteurs, détectés d'après le numéro), une clé DHL, ou les deux. Utilisez ensuite « Suivre un colis » et créez les appareils dans l'onglet Découverte. Pour La Poste, préférez l'intégration La Poste. Sans lien avec les transporteurs ni 17TRACK.",
+        "de": "Gib einen 17TRACK-Schlüssel (alle Zusteller, an der Nummer erkannt), einen DHL-Schlüssel oder beide ein. Nutze dann „Sendung verfolgen“ und lege die Geräte im Tab „Entdecken“ an. Für La Poste nimm die La-Poste-Integration. Keine Verbindung zu den Zustellern oder 17TRACK.",
+        "es": "Introduzca una clave de 17TRACK (todos los transportistas, detectados por el número), una de DHL o ambas. Use después «Seguir un paquete» y cree los dispositivos en la pestaña Descubrir. Para La Poste, use la integración La Poste. Sin relación con los transportistas ni con 17TRACK."
       },
       "links": [
         {
-          "url": "https://open-meteo.com/en/docs",
-          "label": { "en": "Open-Meteo documentation", "fr": "Documentation Open-Meteo" }
+          "url": "https://api.17track.net/en",
+          "label": {
+            "en": "17TRACK tracking API",
+            "fr": "API de suivi 17TRACK",
+            "de": "17TRACK-Tracking-API",
+            "es": "API de seguimiento de 17TRACK"
+          }
+        },
+        {
+          "url": "https://developer.dhl.com/api-reference/shipment-tracking",
+          "label": {
+            "en": "DHL developer portal",
+            "fr": "Portail développeur DHL",
+            "de": "DHL-Entwicklerportal",
+            "es": "Portal para desarrolladores de DHL"
+          }
+        },
+        {
+          "url": "https://github.com/guim31/gladys-colis/blob/main/docs/en.md",
+          "label": {
+            "en": "Setup guide",
+            "fr": "Guide d'installation",
+            "de": "Installationsanleitung",
+            "es": "Guía de instalación"
+          }
         }
       ]
     },
     {
-      "key": "latitude",
-      "type": "number",
-      "label": { "en": "Latitude", "fr": "Latitude" },
-      "description": {
-        "en": "Latitude used for the demo weather sensor.",
-        "fr": "Latitude utilisée par le capteur météo de démonstration."
-      },
-      "placeholder": { "en": "e.g. 48.8566", "fr": "ex. 48.8566" },
-      "required": true,
-      "default": 48.8566,
-      "min": -90,
-      "max": 90
-    },
-    {
-      "key": "longitude",
-      "type": "number",
-      "label": { "en": "Longitude", "fr": "Longitude" },
-      "description": {
-        "en": "Longitude used for the demo weather sensor.",
-        "fr": "Longitude utilisée par le capteur météo de démonstration."
-      },
-      "placeholder": { "en": "e.g. 2.3522", "fr": "ex. 2.3522" },
-      "required": true,
-      "default": 2.3522,
-      "min": -180,
-      "max": 180
-    },
-    {
-      "key": "unit",
-      "type": "select",
-      "label": { "en": "Temperature unit", "fr": "Unité de température" },
+      "key": "seventeentrack_key",
+      "type": "secret",
       "required": false,
-      "default": "celsius",
+      "label": {
+        "en": "17TRACK API key",
+        "fr": "Clé d'API 17TRACK",
+        "de": "17TRACK-API-Schlüssel",
+        "es": "Clave de API de 17TRACK"
+      },
+      "description": {
+        "en": "Settings → Security → Access key of your free account on api.17track.net. Every carrier.",
+        "fr": "Settings → Security → Access key de votre compte gratuit sur api.17track.net. Tous transporteurs.",
+        "de": "Settings → Security → Access key deines kostenlosen Kontos auf api.17track.net. Alle Zusteller.",
+        "es": "Settings → Security → Access key de su cuenta gratuita en api.17track.net. Todos los transportistas."
+      }
+    },
+    {
+      "key": "dhl_key",
+      "type": "secret",
+      "required": false,
+      "label": {
+        "en": "DHL API key",
+        "fr": "Clé d'API DHL",
+        "de": "DHL-API-Schlüssel",
+        "es": "Clave de API de DHL"
+      },
+      "description": {
+        "en": "The API Key of a \"Shipment Tracking - Unified\" app on developer.dhl.com (free, 250 requests a day).",
+        "fr": "La clé (API Key) d'une application « Shipment Tracking - Unified » sur developer.dhl.com (gratuite, 250 requêtes par jour).",
+        "de": "Der API Key einer App „Shipment Tracking - Unified“ auf developer.dhl.com (kostenlos, 250 Abfragen pro Tag).",
+        "es": "La API Key de una aplicación «Shipment Tracking - Unified» en developer.dhl.com (gratuita, 250 consultas al día)."
+      }
+    },
+    {
+      "key": "keep_delivered",
+      "type": "select",
+      "required": false,
+      "default": "7",
+      "label": {
+        "en": "Keep delivered parcels",
+        "fr": "Garder les colis livrés",
+        "de": "Zugestellte Sendungen behalten",
+        "es": "Conservar los paquetes entregados"
+      },
+      "description": {
+        "en": "A delivered parcel is archived after this time: it leaves the list, the widget and the Discover tab.",
+        "fr": "Un colis livré est archivé après ce délai : il quitte la liste, le widget et l'onglet Découverte.",
+        "de": "Eine zugestellte Sendung wird nach dieser Zeit archiviert und verlässt die Liste, das Widget und den Tab „Entdecken“.",
+        "es": "Un paquete entregado se archiva tras este tiempo: sale de la lista, del widget y de la pestaña Descubrir."
+      },
       "options": [
-        { "value": "celsius", "label": { "en": "Celsius", "fr": "Celsius" } },
-        { "value": "fahrenheit", "label": { "en": "Fahrenheit", "fr": "Fahrenheit" } }
+        {
+          "value": "1",
+          "label": {
+            "en": "1 day",
+            "fr": "1 jour",
+            "de": "1 Tag",
+            "es": "1 día"
+          }
+        },
+        {
+          "value": "3",
+          "label": {
+            "en": "3 days",
+            "fr": "3 jours",
+            "de": "3 Tage",
+            "es": "3 días"
+          }
+        },
+        {
+          "value": "7",
+          "label": {
+            "en": "7 days",
+            "fr": "7 jours",
+            "de": "7 Tage",
+            "es": "7 días"
+          }
+        },
+        {
+          "value": "14",
+          "label": {
+            "en": "14 days",
+            "fr": "14 jours",
+            "de": "14 Tage",
+            "es": "14 días"
+          }
+        },
+        {
+          "value": "30",
+          "label": {
+            "en": "30 days",
+            "fr": "30 jours",
+            "de": "30 Tage",
+            "es": "30 días"
+          }
+        }
       ]
     },
     {
-      "key": "poll_frequency",
-      "type": "number",
-      "label": { "en": "Refresh interval (s)", "fr": "Intervalle de rafraîchissement (s)" },
-      "description": {
-        "en": "How often sensors are polled, in seconds (one minute minimum).",
-        "fr": "Fréquence d'interrogation des capteurs, en secondes (une minute minimum)."
-      },
+      "key": "language",
+      "type": "select",
       "required": false,
-      "default": 300,
-      "min": 60,
-      "max": 3600
+      "default": "fr",
+      "label": {
+        "en": "Language",
+        "fr": "Langue",
+        "de": "Sprache",
+        "es": "Idioma"
+      },
+      "description": {
+        "en": "Language of the statuses, of the feature names of the new devices and of the messages. The carriers' texts stay as they send them.",
+        "fr": "Langue des statuts, des noms de fonctionnalités des nouveaux appareils et des messages. Les textes des transporteurs restent tels qu'ils les envoient.",
+        "de": "Sprache der Status, der Funktionsnamen neuer Geräte und der Meldungen. Die Texte der Zusteller bleiben, wie sie sie senden.",
+        "es": "Idioma de los estados, de los nombres de las funciones de los nuevos dispositivos y de los mensajes. Los textos de los transportistas se quedan como los envían."
+      },
+      "options": [
+        {
+          "value": "en",
+          "label": {
+            "en": "English",
+            "fr": "Anglais",
+            "de": "Englisch",
+            "es": "Inglés"
+          }
+        },
+        {
+          "value": "fr",
+          "label": {
+            "en": "French",
+            "fr": "Français",
+            "de": "Französisch",
+            "es": "Francés"
+          }
+        },
+        {
+          "value": "de",
+          "label": {
+            "en": "German",
+            "fr": "Allemand",
+            "de": "Deutsch",
+            "es": "Alemán"
+          }
+        },
+        {
+          "value": "es",
+          "label": {
+            "en": "Spanish",
+            "fr": "Espagnol",
+            "de": "Spanisch",
+            "es": "Español"
+          }
+        }
+      ]
     }
   ],
   "actions": [
     {
-      "key": "test_weather",
-      "label": { "en": "Test the weather provider", "fr": "Tester le fournisseur météo" },
-      "timeout_seconds": 30
-    },
-    {
-      "key": "identify",
-      "label": { "en": "Identify a device", "fr": "Identifier un appareil" },
+      "key": "track_parcel",
+      "label": {
+        "en": "Track a parcel",
+        "fr": "Suivre un colis",
+        "de": "Sendung verfolgen",
+        "es": "Seguir un paquete"
+      },
+      "description": {
+        "en": "Tracks a parcel (carrier detected from the number), or renames the one with this number, then reads it once.",
+        "fr": "Suit un colis (transporteur détecté d'après le numéro), ou renomme celui qui a ce numéro, puis le lit une fois.",
+        "de": "Verfolgt eine Sendung (Zusteller an der Nummer erkannt) oder benennt die mit dieser Nummer um und liest sie dann einmal.",
+        "es": "Sigue un paquete (transportista detectado por el número), o cambia el nombre del que tiene este número, y lo lee una vez."
+      },
+      "timeout_seconds": 60,
       "fields": [
         {
-          "key": "device",
-          "type": "select",
-          "source": "devices",
-          "label": { "en": "Device", "fr": "Appareil" },
-          "required": true
+          "key": "number",
+          "type": "string",
+          "required": true,
+          "label": {
+            "en": "Tracking number",
+            "fr": "Numéro de suivi",
+            "de": "Sendungsnummer",
+            "es": "Número de seguimiento"
+          },
+          "description": {
+            "en": "8 to 40 letters and digits, spaces allowed.",
+            "fr": "8 à 40 lettres et chiffres, espaces acceptées.",
+            "de": "8 bis 40 Buchstaben und Ziffern, Leerzeichen erlaubt.",
+            "es": "De 8 a 40 letras y cifras, se admiten espacios."
+          },
+          "placeholder": {
+            "en": "e.g. 1Z999AA10123456784",
+            "fr": "ex. 1Z999AA10123456784",
+            "de": "z. B. 00340434292135100186",
+            "es": "p. ej. 1Z999AA10123456784"
+          }
+        },
+        {
+          "key": "name",
+          "type": "string",
+          "required": false,
+          "label": {
+            "en": "Name (optional)",
+            "fr": "Nom (facultatif)",
+            "de": "Name (optional)",
+            "es": "Nombre (opcional)"
+          },
+          "placeholder": {
+            "en": "e.g. Running shoes",
+            "fr": "ex. Chaussures de course",
+            "de": "z. B. Laufschuhe",
+            "es": "p. ej. Zapatillas de correr"
+          }
         }
       ]
+    },
+    {
+      "key": "untrack_parcel",
+      "label": {
+        "en": "Stop tracking a parcel",
+        "fr": "Arrêter de suivre un colis",
+        "de": "Sendung nicht mehr verfolgen",
+        "es": "Dejar de seguir un paquete"
+      },
+      "description": {
+        "en": "Stops tracking a parcel, before it is archived by itself. Its device stays in Gladys: delete it there.",
+        "fr": "Arrête de suivre un colis, avant qu'il ne soit archivé tout seul. Son appareil reste dans Gladys : supprimez-le là.",
+        "de": "Beendet die Verfolgung einer Sendung, bevor sie von selbst archiviert wird. Das Gerät bleibt in Gladys: Lösche es dort.",
+        "es": "Deja de seguir un paquete antes de que se archive solo. Su dispositivo sigue en Gladys: elimínelo allí."
+      },
+      "timeout_seconds": 15,
+      "fields": [
+        {
+          "key": "parcel",
+          "type": "string",
+          "required": true,
+          "label": {
+            "en": "Name or tracking number",
+            "fr": "Nom ou numéro de suivi",
+            "de": "Name oder Sendungsnummer",
+            "es": "Nombre o número de seguimiento"
+          }
+        }
+      ]
+    },
+    {
+      "key": "refresh",
+      "label": {
+        "en": "Read the parcels now",
+        "fr": "Relire les colis maintenant",
+        "de": "Sendungen jetzt lesen",
+        "es": "Leer los paquetes ahora"
+      },
+      "description": {
+        "en": "Reads every parcel on the way at once, checks the keys and shows the 17TRACK quota and the DHL requests left today.",
+        "fr": "Lit tout de suite chaque colis en cours, vérifie les clés et affiche le quota 17TRACK et les requêtes DHL du jour.",
+        "de": "Liest sofort jede Sendung unterwegs, prüft die Schlüssel und zeigt das 17TRACK-Kontingent und die DHL-Abfragen von heute.",
+        "es": "Lee en el acto cada paquete en curso, comprueba las claves y muestra la cuota de 17TRACK y las consultas DHL de hoy."
+      },
+      "timeout_seconds": 120
     }
   ],
   "scene_triggers": [
     {
-      "key": "motion_detected",
-      "label": { "en": "Motion detected", "fr": "Mouvement détecté" },
+      "key": "parcel_out_for_delivery",
+      "label": {
+        "en": "A parcel is out for delivery",
+        "fr": "Un colis est en cours de livraison",
+        "de": "Eine Sendung ist in Zustellung",
+        "es": "Un paquete está en reparto"
+      },
       "description": {
-        "en": "A demo motion sensor saw a person or an animal move.",
-        "fr": "Un détecteur de démonstration a vu bouger une personne ou un animal."
+        "en": "The courier has the parcel for today's round.",
+        "fr": "Le livreur a pris le colis pour sa tournée du jour.",
+        "de": "Der Fahrer hat die Sendung für die heutige Tour.",
+        "es": "El repartidor lleva el paquete en su ruta de hoy."
       },
       "fields": [
         {
-          "key": "device",
+          "key": "parcel",
           "type": "select",
           "source": "devices",
-          "label": { "en": "Sensor", "fr": "Détecteur" }
+          "label": {
+            "en": "Parcel (any if empty)",
+            "fr": "Colis (tous si vide)",
+            "de": "Sendung (alle, wenn leer)",
+            "es": "Paquete (todos si está vacío)"
+          }
+        }
+      ],
+      "variables": [
+        {
+          "key": "name",
+          "type": "string",
+          "label": {
+            "en": "Parcel name",
+            "fr": "Nom du colis",
+            "de": "Name der Sendung",
+            "es": "Nombre del paquete"
+          }
         },
         {
-          "key": "target",
+          "key": "number",
+          "type": "string",
+          "label": {
+            "en": "Tracking number",
+            "fr": "Numéro de suivi",
+            "de": "Sendungsnummer",
+            "es": "Número de seguimiento"
+          }
+        },
+        {
+          "key": "carrier",
+          "type": "string",
+          "label": {
+            "en": "Carrier",
+            "fr": "Transporteur",
+            "de": "Zusteller",
+            "es": "Transportista"
+          }
+        },
+        {
+          "key": "status",
+          "type": "string",
+          "label": {
+            "en": "Status",
+            "fr": "Statut",
+            "de": "Status",
+            "es": "Estado"
+          }
+        },
+        {
+          "key": "event",
+          "type": "string",
+          "label": {
+            "en": "Last event (carrier's text)",
+            "fr": "Dernière étape (texte du transporteur)",
+            "de": "Letzter Schritt (Text des Zustellers)",
+            "es": "Último paso (texto del transportista)"
+          }
+        },
+        {
+          "key": "location",
+          "type": "string",
+          "label": {
+            "en": "Place of the last event",
+            "fr": "Lieu de la dernière étape",
+            "de": "Ort des letzten Schritts",
+            "es": "Lugar del último paso"
+          }
+        },
+        {
+          "key": "url",
+          "type": "string",
+          "label": {
+            "en": "Tracking page",
+            "fr": "Page de suivi",
+            "de": "Verfolgungsseite",
+            "es": "Página de seguimiento"
+          }
+        }
+      ]
+    },
+    {
+      "key": "parcel_delivered",
+      "label": {
+        "en": "A parcel is delivered",
+        "fr": "Un colis est livré",
+        "de": "Eine Sendung ist zugestellt",
+        "es": "Un paquete se ha entregado"
+      },
+      "description": {
+        "en": "The carrier reports the parcel delivered (not for a parcel already delivered when added).",
+        "fr": "Le transporteur indique le colis livré (pas pour un colis déjà livré à son ajout).",
+        "de": "Der Zusteller meldet die Sendung als zugestellt (nicht bei einer beim Hinzufügen schon zugestellten).",
+        "es": "El transportista indica el paquete entregado (no para uno ya entregado al añadirlo)."
+      },
+      "fields": [
+        {
+          "key": "parcel",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Parcel (any if empty)",
+            "fr": "Colis (tous si vide)",
+            "de": "Sendung (alle, wenn leer)",
+            "es": "Paquete (todos si está vacío)"
+          }
+        }
+      ],
+      "variables": [
+        {
+          "key": "name",
+          "type": "string",
+          "label": {
+            "en": "Parcel name",
+            "fr": "Nom du colis",
+            "de": "Name der Sendung",
+            "es": "Nombre del paquete"
+          }
+        },
+        {
+          "key": "number",
+          "type": "string",
+          "label": {
+            "en": "Tracking number",
+            "fr": "Numéro de suivi",
+            "de": "Sendungsnummer",
+            "es": "Número de seguimiento"
+          }
+        },
+        {
+          "key": "carrier",
+          "type": "string",
+          "label": {
+            "en": "Carrier",
+            "fr": "Transporteur",
+            "de": "Zusteller",
+            "es": "Transportista"
+          }
+        },
+        {
+          "key": "status",
+          "type": "string",
+          "label": {
+            "en": "Status",
+            "fr": "Statut",
+            "de": "Status",
+            "es": "Estado"
+          }
+        },
+        {
+          "key": "event",
+          "type": "string",
+          "label": {
+            "en": "Last event (carrier's text)",
+            "fr": "Dernière étape (texte du transporteur)",
+            "de": "Letzter Schritt (Text des Zustellers)",
+            "es": "Último paso (texto del transportista)"
+          }
+        },
+        {
+          "key": "location",
+          "type": "string",
+          "label": {
+            "en": "Place of the last event",
+            "fr": "Lieu de la dernière étape",
+            "de": "Ort des letzten Schritts",
+            "es": "Lugar del último paso"
+          }
+        },
+        {
+          "key": "url",
+          "type": "string",
+          "label": {
+            "en": "Tracking page",
+            "fr": "Page de suivi",
+            "de": "Verfolgungsseite",
+            "es": "Página de seguimiento"
+          }
+        }
+      ]
+    },
+    {
+      "key": "parcel_needs_attention",
+      "label": {
+        "en": "A parcel needs you",
+        "fr": "Un colis demande votre attention",
+        "de": "Eine Sendung braucht dich",
+        "es": "Un paquete requiere su atención"
+      },
+      "description": {
+        "en": "The parcel waits at a pickup point or a locker, or has a problem: failed delivery, customs, delay, return.",
+        "fr": "Le colis attend en point relais ou en consigne, ou a un problème : livraison manquée, douane, retard, retour.",
+        "de": "Die Sendung wartet an einer Abholstelle oder Packstation oder hat ein Problem: Zustellung gescheitert, Zoll, Verspätung, Rücksendung.",
+        "es": "El paquete espera en un punto de recogida o un casillero, o tiene un problema: entrega fallida, aduana, retraso, devolución."
+      },
+      "fields": [
+        {
+          "key": "parcel",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Parcel (any if empty)",
+            "fr": "Colis (tous si vide)",
+            "de": "Sendung (alle, wenn leer)",
+            "es": "Paquete (todos si está vacío)"
+          }
+        },
+        {
+          "key": "reason",
           "type": "multi_select",
-          "label": { "en": "What moved", "fr": "Ce qui a bougé" },
+          "label": {
+            "en": "Reason (any if empty)",
+            "fr": "Motif (tous si vide)",
+            "de": "Grund (alle, wenn leer)",
+            "es": "Motivo (todos si está vacío)"
+          },
           "options": [
-            { "value": "person", "label": { "en": "Person", "fr": "Personne" } },
-            { "value": "animal", "label": { "en": "Animal", "fr": "Animal" } }
+            {
+              "value": "awaiting_pickup",
+              "label": {
+                "en": "To pick up",
+                "fr": "À retirer",
+                "de": "Abholbereit",
+                "es": "Para recoger"
+              }
+            },
+            {
+              "value": "problem",
+              "label": {
+                "en": "Problem",
+                "fr": "Problème",
+                "de": "Problem",
+                "es": "Problema"
+              }
+            }
           ]
         }
       ],
       "variables": [
         {
-          "key": "target",
+          "key": "name",
           "type": "string",
-          "label": { "en": "What moved", "fr": "Ce qui a bougé" }
+          "label": {
+            "en": "Parcel name",
+            "fr": "Nom du colis",
+            "de": "Name der Sendung",
+            "es": "Nombre del paquete"
+          }
+        },
+        {
+          "key": "number",
+          "type": "string",
+          "label": {
+            "en": "Tracking number",
+            "fr": "Numéro de suivi",
+            "de": "Sendungsnummer",
+            "es": "Número de seguimiento"
+          }
+        },
+        {
+          "key": "carrier",
+          "type": "string",
+          "label": {
+            "en": "Carrier",
+            "fr": "Transporteur",
+            "de": "Zusteller",
+            "es": "Transportista"
+          }
+        },
+        {
+          "key": "status",
+          "type": "string",
+          "label": {
+            "en": "Status",
+            "fr": "Statut",
+            "de": "Status",
+            "es": "Estado"
+          }
+        },
+        {
+          "key": "event",
+          "type": "string",
+          "label": {
+            "en": "Last event (carrier's text)",
+            "fr": "Dernière étape (texte du transporteur)",
+            "de": "Letzter Schritt (Text des Zustellers)",
+            "es": "Último paso (texto del transportista)"
+          }
+        },
+        {
+          "key": "location",
+          "type": "string",
+          "label": {
+            "en": "Place of the last event",
+            "fr": "Lieu de la dernière étape",
+            "de": "Ort des letzten Schritts",
+            "es": "Lugar del último paso"
+          }
+        },
+        {
+          "key": "url",
+          "type": "string",
+          "label": {
+            "en": "Tracking page",
+            "fr": "Page de suivi",
+            "de": "Verfolgungsseite",
+            "es": "Página de seguimiento"
+          }
+        },
+        {
+          "key": "reason",
+          "type": "string",
+          "label": {
+            "en": "Reason (awaiting_pickup or problem)",
+            "fr": "Motif (awaiting_pickup ou problem)",
+            "de": "Grund (awaiting_pickup oder problem)",
+            "es": "Motivo (awaiting_pickup o problem)"
+          }
         }
       ]
     }
   ],
   "scene_actions": [
     {
-      "key": "identify_device",
-      "label": { "en": "Identify a device", "fr": "Identifier un appareil" },
-      "description": {
-        "en": "Make a device signal itself (the demo light blinks).",
-        "fr": "Fait se signaler un appareil (la lampe de démonstration clignote)."
+      "key": "track_parcel",
+      "label": {
+        "en": "Track a parcel",
+        "fr": "Suivre un colis",
+        "de": "Sendung verfolgen",
+        "es": "Seguir un paquete"
       },
-      "timeout_seconds": 15,
+      "description": {
+        "en": "Adds a parcel to the list. The number field also takes a whole text, such as a mail subject: its first tracking number is used.",
+        "fr": "Ajoute un colis à la liste. Le champ numéro accepte aussi un texte entier, comme l'objet d'un mail : son premier numéro de suivi est retenu.",
+        "de": "Fügt eine Sendung zur Liste hinzu. Das Nummernfeld nimmt auch einen ganzen Text, etwa einen Mail-Betreff: Seine erste Sendungsnummer wird verwendet.",
+        "es": "Añade un paquete a la lista. El campo del número admite también un texto entero, como el asunto de un correo: se usa su primer número de seguimiento."
+      },
+      "timeout_seconds": 60,
       "fields": [
         {
-          "key": "device",
-          "type": "select",
-          "source": "devices",
-          "label": { "en": "Device", "fr": "Appareil" },
-          "required": true
+          "key": "number",
+          "type": "string",
+          "required": true,
+          "label": {
+            "en": "Tracking number or text",
+            "fr": "Numéro de suivi ou texte",
+            "de": "Sendungsnummer oder Text",
+            "es": "Número de seguimiento o texto"
+          },
+          "placeholder": {
+            "en": "e.g. 1Z999AA10123456784",
+            "fr": "ex. 1Z999AA10123456784",
+            "de": "z. B. 00340434292135100186",
+            "es": "p. ej. 1Z999AA10123456784"
+          }
+        },
+        {
+          "key": "name",
+          "type": "string",
+          "required": false,
+          "label": {
+            "en": "Name (optional)",
+            "fr": "Nom (facultatif)",
+            "de": "Name (optional)",
+            "es": "Nombre (opcional)"
+          }
         }
       ],
       "outputs": [
         {
-          "key": "signalled",
-          "type": "boolean",
-          "label": { "en": "Device signalled", "fr": "Appareil signalé" }
+          "key": "number",
+          "type": "string",
+          "label": {
+            "en": "Tracking number",
+            "fr": "Numéro de suivi",
+            "de": "Sendungsnummer",
+            "es": "Número de seguimiento"
+          }
+        },
+        {
+          "key": "name",
+          "type": "string",
+          "label": {
+            "en": "Parcel name",
+            "fr": "Nom du colis",
+            "de": "Name der Sendung",
+            "es": "Nombre del paquete"
+          }
+        },
+        {
+          "key": "status",
+          "type": "string",
+          "label": {
+            "en": "Status",
+            "fr": "Statut",
+            "de": "Status",
+            "es": "Estado"
+          }
+        },
+        {
+          "key": "carrier",
+          "type": "string",
+          "label": {
+            "en": "Carrier",
+            "fr": "Transporteur",
+            "de": "Zusteller",
+            "es": "Transportista"
+          }
+        },
+        {
+          "key": "added",
+          "type": "number",
+          "label": {
+            "en": "New parcel (1 = yes, 0 = no)",
+            "fr": "Nouveau colis (1 = oui, 0 = non)",
+            "de": "Neue Sendung (1 = ja, 0 = nein)",
+            "es": "Paquete nuevo (1 = sí, 0 = no)"
+          }
+        }
+      ]
+    },
+    {
+      "key": "untrack_parcel",
+      "label": {
+        "en": "Stop tracking a parcel",
+        "fr": "Arrêter de suivre un colis",
+        "de": "Sendung nicht mehr verfolgen",
+        "es": "Dejar de seguir un paquete"
+      },
+      "description": {
+        "en": "Stops tracking a parcel, by name or tracking number. \"Removed\" is 0 when no tracked parcel matches.",
+        "fr": "Arrête de suivre un colis, par son nom ou son numéro. « Retiré » vaut 0 quand aucun colis suivi ne correspond.",
+        "de": "Beendet die Verfolgung einer Sendung, nach Name oder Nummer. „Entfernt“ ist 0, wenn keine verfolgte Sendung passt.",
+        "es": "Deja de seguir un paquete, por nombre o número. «Quitado» vale 0 cuando ningún paquete en seguimiento coincide."
+      },
+      "timeout_seconds": 15,
+      "fields": [
+        {
+          "key": "parcel",
+          "type": "string",
+          "required": true,
+          "label": {
+            "en": "Name or tracking number",
+            "fr": "Nom ou numéro de suivi",
+            "de": "Name oder Sendungsnummer",
+            "es": "Nombre o número de seguimiento"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "key": "removed",
+          "type": "number",
+          "label": {
+            "en": "Removed (1 = yes, 0 = no)",
+            "fr": "Retiré (1 = oui, 0 = non)",
+            "de": "Entfernt (1 = ja, 0 = nein)",
+            "es": "Quitado (1 = sí, 0 = no)"
+          }
+        },
+        {
+          "key": "name",
+          "type": "string",
+          "label": {
+            "en": "Parcel name",
+            "fr": "Nom du colis",
+            "de": "Name der Sendung",
+            "es": "Nombre del paquete"
+          }
+        }
+      ]
+    },
+    {
+      "key": "read_parcels",
+      "label": {
+        "en": "Read my parcels",
+        "fr": "Lire l'état de mes colis",
+        "de": "Meine Sendungen lesen",
+        "es": "Leer mis paquetes"
+      },
+      "description": {
+        "en": "A sentence listing the parcels on the way and their status, for a message or a voice announcement.",
+        "fr": "Une phrase qui liste les colis en cours et leur statut, pour un message ou une annonce vocale.",
+        "de": "Ein Satz mit den Sendungen unterwegs und ihrem Status, für eine Nachricht oder eine Sprachansage.",
+        "es": "Una frase con los paquetes en curso y su estado, para un mensaje o un anuncio de voz."
+      },
+      "timeout_seconds": 10,
+      "outputs": [
+        {
+          "key": "text",
+          "type": "string",
+          "label": {
+            "en": "Sentence",
+            "fr": "Phrase",
+            "de": "Satz",
+            "es": "Frase"
+          }
+        },
+        {
+          "key": "in_progress",
+          "type": "number",
+          "label": {
+            "en": "Parcels on the way",
+            "fr": "Colis en cours",
+            "de": "Sendungen unterwegs",
+            "es": "Paquetes en curso"
+          }
+        },
+        {
+          "key": "out_for_delivery",
+          "type": "number",
+          "label": {
+            "en": "Out for delivery",
+            "fr": "En cours de livraison",
+            "de": "In Zustellung",
+            "es": "En reparto"
+          }
+        },
+        {
+          "key": "awaiting_pickup",
+          "type": "number",
+          "label": {
+            "en": "To pick up",
+            "fr": "À retirer",
+            "de": "Abholbereit",
+            "es": "Para recoger"
+          }
+        },
+        {
+          "key": "problems",
+          "type": "number",
+          "label": {
+            "en": "With a problem",
+            "fr": "Avec un problème",
+            "de": "Mit Problem",
+            "es": "Con un problema"
+          }
         }
       ]
     }
   ],
   "widgets": [
     {
-      "key": "demo_status",
-      "label": { "en": "Demo status", "fr": "État de la démo" },
-      "description": {
-        "en": "Live temperature and plug power, plug connection and observed location.",
-        "fr": "Température et puissance en direct, connexion de la prise, position observée."
+      "key": "parcels",
+      "label": {
+        "en": "My parcels",
+        "fr": "Mes colis",
+        "de": "Meine Sendungen",
+        "es": "Mis paquetes"
       },
-      "icon": "activity",
-      "action_timeout_seconds": 15
+      "description": {
+        "en": "Your parcels with status, last event and date; history and tracking link on tap.",
+        "fr": "Vos colis avec statut, dernière étape et date ; historique et lien de suivi au toucher.",
+        "de": "Deine Sendungen mit Status, letztem Schritt und Datum; Verlauf und Link per Tippen.",
+        "es": "Sus paquetes con estado, último paso y fecha; historial y enlace de seguimiento al tocar."
+      },
+      "icon": "package"
     }
   ]
 }
